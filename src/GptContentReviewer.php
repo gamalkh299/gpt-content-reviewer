@@ -4,18 +4,18 @@ namespace gamalkh\GptContentReviewer;
 
 use GuzzleHttp\Client;
 
-class GptContentReviewer {
-
+class GptContentReviewer
+{
     protected $client;
+
     protected $apiKey;
 
     public function __construct()
     {
-        $this->client = new Client();
+        $this->client = new Client;
         $this->apiKey = config('gpt-content-review.api_key');
         $this->defaultModel = config('gpt-content-review.default_model');
     }
-
 
     public function reviewContent($input, $model = null)
     {
@@ -32,9 +32,9 @@ class GptContentReviewer {
                     'messages' => [
                         ['role' => 'system', 'content' => 'You are a content moderation assistant. Return JSON {"harmful": true/false, "reason": "reason for classification"}.'],
                         ['role' => 'user', 'content' => 'Review this image for nudity or harmful content.'],
-                        ['role' => 'user', 'content' => $imageData]
-                    ]
-                ]
+                        ['role' => 'user', 'content' => $imageData],
+                    ],
+                ],
             ]);
         } else {
             // Process Text Input
@@ -44,20 +44,19 @@ class GptContentReviewer {
                     'model' => $modelToUse,
                     'messages' => [
                         ['role' => 'system', 'content' => 'You are a content moderation assistant. Return JSON {"harmful": true/false, "reason": "reason for classification"}.'],
-                        ['role' => 'user', 'content' => $input]
-                    ]
-                ]
+                        ['role' => 'user', 'content' => $input],
+                    ],
+                ],
             ]);
         }
 
         return $this->parseJsonResponse($response);
     }
 
-
     /**
      * Detect if input is an image (path or URL)
      *
-     * @param string $input
+     * @param  string  $input
      * @return bool
      */
     protected function isImage($input)
@@ -68,7 +67,7 @@ class GptContentReviewer {
     /**
      * Convert Image Path or URL to Base64
      *
-     * @param string $input
+     * @param  string  $input
      * @return string
      */
     protected function getImageBase64($input)
@@ -85,7 +84,7 @@ class GptContentReviewer {
     /**
      * Parse JSON Response
      *
-     * @param \Psr\Http\Message\ResponseInterface $response
+     * @param  \Psr\Http\Message\ResponseInterface  $response
      * @return array
      */
     protected function parseJsonResponse($response)
@@ -101,11 +100,7 @@ class GptContentReviewer {
 
         return [
             'harmful' => true,
-            'reason' => 'Unable to parse response from GPT.'
+            'reason' => 'Unable to parse response from GPT.',
         ];
     }
-
-
-
-
 }
