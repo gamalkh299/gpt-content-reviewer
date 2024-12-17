@@ -1,22 +1,22 @@
 {
-    "name": ":vendor_slug/:package_slug",
-    "description": ":package_description",
+    "name": "gamalkh299/gpt-content-reviewer",
+    "description": "A Laravel package to review content and images using ChatGPT API",
     "keywords": [
-        ":vendor_name",
+        "Gamal Khaled",
         "laravel",
-        ":package_slug"
+        "gpt-content-reviewer"
     ],
-    "homepage": "https://github.com/:vendor_slug/:package_slug",
+    "homepage": "https://github.com/gamalkh299/gpt-content-reviewer",
     "license": "MIT",
     "authors": [
         {
-            "name": ":author_name",
-            "email": "author@domain.com",
+            "name": ":gamalkh299",
+            "email": "gamalkh299@gmail.com",
             "role": "Developer"
         }
     ],
     "require": {
-        "php": "^8.4",
+        "php": "^8.3",
         "spatie/laravel-package-tools": "^1.16",
         "illuminate/contracts": "^10.0||^11.0"
     },
@@ -35,13 +35,13 @@
     },
     "autoload": {
         "psr-4": {
-            "VendorName\\Skeleton\\": "src/",
-            "VendorName\\Skeleton\\Database\\Factories\\": "database/factories/"
+            "gamalkh\\GptContentReviewer\\": "src/",
+            "gamalkh\\GptContentReviewer\\Database\\Factories\\": "database/factories/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "VendorName\\Skeleton\\Tests\\": "tests/",
+            "gamalkh\\GptContentReviewer\\Tests\\": "tests/",
             "Workbench\\App\\": "workbench/app/"
         }
     },
@@ -63,10 +63,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "VendorName\\Skeleton\\SkeletonServiceProvider"
+                "gamalkh\\GptContentReviewer\\GptContentReviewerServiceProvider"
             ],
             "aliases": {
-                "Skeleton": "VendorName\\Skeleton\\Facades\\Skeleton"
+                "GptContentReviewer": "gamalkh\\GptContentReviewer\\Facades\\GptContentReviewer"
             }
         }
     },
