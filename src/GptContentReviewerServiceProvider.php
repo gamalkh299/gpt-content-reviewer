@@ -2,9 +2,9 @@
 
 namespace gamalkh\GptContentReviewer;
 
+use gamalkh\GptContentReviewer\Commands\GptContentReviewerCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use gamalkh\GptContentReviewer\Commands\GptContentReviewerCommand;
 
 class GptContentReviewerServiceProvider extends PackageServiceProvider
 {
