@@ -2,9 +2,9 @@
 
 namespace gamalkh\GptContentReviewer\Tests;
 
+use gamalkh\GptContentReviewer\GptContentReviewerServiceProvider;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Orchestra\Testbench\TestCase as Orchestra;
-use gamalkh\GptContentReviewer\GptContentReviewerServiceProvider;
 
 class TestCase extends Orchestra
 {
