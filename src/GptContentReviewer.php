@@ -3,54 +3,76 @@
 namespace gamalkh\GptContentReviewer;
 
 use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Http;
 
 class GptContentReviewer {
 
-    protected $client;
-    protected $apiKey;
+    protected Client $client;
+    protected mixed $apiKey;
 
     public function __construct()
     {
         $this->client = new Client();
-        $this->apiKey = config('gpt-content-review.api_key');
-        $this->defaultModel = config('gpt-content-review.default_model');
+        $this->apiKey = config('gpt-content-reviewer.api_key');
     }
 
 
-    public function reviewContent($input, $model = null)
+    /**
+     * @param $input
+     * @return array
+     */
+    public function ModerateContent($input): array
     {
-        $modelToUse = $model ?? $this->defaultModel;
+            $modelToUse = 'omni-moderation-latest';
 
-        if ($this->isImage($input)) {
-            // Process Image Input
-            $imageData = $this->getImageBase64($input);
+        try {
 
-            $response = $this->client->post('https://api.openai.com/v1/chat/completions', [
-                'headers' => ['Authorization' => "Bearer {$this->apiKey}"],
-                'json' => [
+            if ($this->isImage($input)) {
+                $imageData = $this->getImageBase64($input);
+
+
+                $response = Http::withHeaders([
+                    'Authorization'=>'Bearer '.$this->apiKey,
+                    'Content-Type'=>'application/json'
+                ])->post('https://api.openai.com/v1/moderations', [
                     'model' => $modelToUse,
-                    'messages' => [
-                        ['role' => 'system', 'content' => 'You are a content moderation assistant. Return JSON {"harmful": true/false, "reason": "reason for classification"}.'],
-                        ['role' => 'user', 'content' => 'Review this image for nudity or harmful content.'],
-                        ['role' => 'user', 'content' => $imageData]
+                    'input'=>[
+                        [
+                            'type'=>'text',
+                            'text'=>$input
+                        ],
+                        [
+                            'type'=>'image_url',
+                            'image_url'=>[
+                                'url'=>$imageData
+                            ]
+                        ]
                     ]
-                ]
-            ]);
-        } else {
-            // Process Text Input
-            $response = $this->client->post('https://api.openai.com/v1/chat/completions', [
-                'headers' => ['Authorization' => "Bearer {$this->apiKey}"],
-                'json' => [
+                ]);
+
+
+            } else {
+//           Process Text Input
+                $response = Http::withHeaders([
+                    'Authorization'=>'Bearer '.$this->apiKey,
+                    'Content-Type'=>'application/json'
+                ])->post('https://api.openai.com/v1/moderations', [
                     'model' => $modelToUse,
-                    'messages' => [
-                        ['role' => 'system', 'content' => 'You are a content moderation assistant. Return JSON {"harmful": true/false, "reason": "reason for classification"}.'],
-                        ['role' => 'user', 'content' => $input]
-                    ]
-                ]
-            ]);
+                    'input'=>$input,
+
+                ]);
+            }
+
+            return $response['results'];
+
+
+
+        }catch (\Exception $e) {
+            return [
+                'harmful' => true,
+                'reason' => 'Unable to parse response from GPT because of: '.$e->getMessage()
+            ];
         }
-
-        return $this->parseJsonResponse($response);
     }
 
 
@@ -82,28 +104,6 @@ class GptContentReviewer {
         return base64_encode($imageData);
     }
 
-    /**
-     * Parse JSON Response
-     *
-     * @param \Psr\Http\Message\ResponseInterface $response
-     * @return array
-     */
-    protected function parseJsonResponse($response)
-    {
-        $content = json_decode($response->getBody()->getContents(), true);
-
-        if (isset($content['choices'][0]['message']['content'])) {
-            $result = json_decode($content['choices'][0]['message']['content'], true);
-            if (json_last_error() === JSON_ERROR_NONE) {
-                return $result;
-            }
-        }
-
-        return [
-            'harmful' => true,
-            'reason' => 'Unable to parse response from GPT.'
-        ];
-    }
 
 
 

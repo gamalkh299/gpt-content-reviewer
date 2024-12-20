@@ -11,8 +11,8 @@ class GptContentReviewerServiceProvider extends PackageServiceProvider
 
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__.'/../config/gpt-content-review.php', 'gpt-content-review');
-        $this->app->singleton('GptContentReview', function () {
+        $this->mergeConfigFrom(__DIR__.'/../config/gpt-content-reviewer.php', 'gpt-content-reviewer');
+        $this->app->singleton('GptContentReviewer', function () {
             return new GptContentReviewer();
         });
     }
@@ -20,11 +20,7 @@ class GptContentReviewerServiceProvider extends PackageServiceProvider
 
     public function configurePackage(Package $package): void
     {
-        /*
-         * This class is a Package Service Provider
-         *
-         * More info: https://github.com/spatie/laravel-package-tools
-         */
+
         $package
             ->name('gpt-content-reviewer')
             ->hasConfigFile()
@@ -33,13 +29,14 @@ class GptContentReviewerServiceProvider extends PackageServiceProvider
             ->hasCommand(GptContentReviewerCommand::class);
     }
 
-
     public function boot()
     {
         $this->publishes([
-            __DIR__.'/../config/gpt-content-review.php' => config_path('gpt-content-review.php'),
+            __DIR__.'/../config/gpt-content-reviewer.php' => config_path('gpt-content-reviewer.php'),
         ], 'config');
 
-        $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
+        $this->publishes([
+            __DIR__.'/../database/migrations/create_gpt_content_reviewer_table.php.stub' => database_path('migrations/'.date('Y_m_d_His', time()).'_create_gpt_content_reviewer_table.php'),
+        ], 'migrations');
     }
 }
