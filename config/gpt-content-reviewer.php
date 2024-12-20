@@ -4,6 +4,6 @@
 return [
 
     //GPT Version
-    'api_key' => env('CHAT_GPT_API_KEY',''),
+    'api_key' => env('CHAT_GPT_API_KEY', ''),
 
 ];

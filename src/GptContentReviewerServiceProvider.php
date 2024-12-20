@@ -8,15 +8,13 @@ use Spatie\LaravelPackageTools\PackageServiceProvider;
 
 class GptContentReviewerServiceProvider extends PackageServiceProvider
 {
-
     public function register()
     {
         $this->mergeConfigFrom(__DIR__.'/../config/gpt-content-reviewer.php', 'gpt-content-reviewer');
         $this->app->singleton('GptContentReviewer', function () {
-            return new GptContentReviewer();
+            return new GptContentReviewer;
         });
     }
-
 
     public function configurePackage(Package $package): void
     {
