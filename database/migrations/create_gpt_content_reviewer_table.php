@@ -10,16 +10,20 @@ return new class extends Migration
     {
         Schema::create('gpt_content_reviewer_table', function (Blueprint $table) {
             $table->id();
-            $table->string('content');
-
-            $table->string('review');
-            $table->string('status');
-            $table->string('confidence');
-            $table->string('reviewed_at');
-
-            // add fields
-
+            $table->string('reviewable_type'); // Polymorphic type Model
+            $table->unsignedBigInteger('reviewable_id'); // Polymorphic ID
+            $table->boolean('is_flagged')->nullable(); // Whether the content is flagged
+            $table->string('reason')->nullable(); // Reason for flagging
+            $table->enum('status', ['pending', 'completed', 'failed'])->default('pending'); // Process status
+            $table->text('response')->nullable(); // Response from the AI
             $table->timestamps();
         });
     }
+
+
+
 };
+
+
+
+

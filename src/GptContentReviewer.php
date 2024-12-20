@@ -2,8 +2,11 @@
 
 namespace gamalkh\GptContentReviewer;
 
+use gamalkh\GptContentReviewer\Jobs\ModerationJob;
+use gamalkh\GptContentReviewer\Models\GptReviewer;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class GptContentReviewer {
 
@@ -17,6 +20,30 @@ class GptContentReviewer {
     }
 
 
+
+    /**
+     * Create a review entry and dispatch the moderation job.
+     *
+     * @param \Illuminate\Database\Eloquent\Model $model The model to review
+     * @return Review
+     */
+    public function createReview($model)
+    {
+        $review = GptReviewer::create([
+            'reviewable_type' => get_class($model),
+            'reviewable_id' => $model->id,
+            'status' => 'pending',
+
+        ]);
+
+        ModerationJob::dispatch($review, $model->content);
+
+        return $review;
+    }
+
+
+
+
     /**
      * @param $input
      * @return array
@@ -26,6 +53,7 @@ class GptContentReviewer {
             $modelToUse = 'omni-moderation-latest';
 
         try {
+            Log::info('from ModerateContent Function : '+ $input);
 
             if ($this->isImage($input)) {
                 $imageData = $this->getImageBase64($input);
