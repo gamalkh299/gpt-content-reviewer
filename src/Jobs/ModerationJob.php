@@ -10,15 +10,13 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-
 class ModerationJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected $reviewId;
 
-
-    public function __construct($reviewId , $content)
+    public function __construct($reviewId, $content)
     {
 
         $this->reviewId = $reviewId;
@@ -27,19 +25,15 @@ class ModerationJob implements ShouldQueue
 
     /**
      * Execute the job.
-     *
-     * @return void
      */
     public function handle(): void
     {
         $review = GptReviewer::find($this->reviewId);
 
-
-
-
-        if (!$review) {
+        if (! $review) {
             // Log error if the review cannot be found
             \Log::error("Review not found for ID: {$this->reviewId}");
+
             return;
         }
 
