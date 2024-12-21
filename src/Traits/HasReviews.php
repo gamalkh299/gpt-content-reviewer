@@ -6,6 +6,13 @@ use gamalkh\GptContentReviewer\Models\GptReviewer;
 
 trait HasReviews
 {
+
+    /**
+     *
+     * Get the column(s) that should be reviewed.
+     * @return array|string
+     */
+        public abstract function getReviewableColumns();
     /**
      * Define a polymorphic relation to reviews.
      *
@@ -15,4 +22,7 @@ trait HasReviews
     {
         return $this->morphMany(GptReviewer::class, 'reviewable');
     }
+
+
+
 }
