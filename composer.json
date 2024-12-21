@@ -12,7 +12,7 @@
         {
             "name": ":gamalkh299",
             "email": "gamalkh299@gmail.com",
-            "role": "Developer"
+            "role": "Atuhor"
         }
     ],
     "require": {
@@ -57,7 +57,7 @@
         "sort-packages": true,
         "allow-plugins": {
             "pestphp/pest-plugin": true,
-            "phpstan/extension-installer": true
+            "phpstan/extension-installer": false
         }
     },
     "extra": {

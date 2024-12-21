@@ -5,5 +5,6 @@ return [
 
     //GPT Version
     'api_key' => env('CHAT_GPT_API_KEY', ''),
+    'queue' => env('GPT_QUEUE', 'gpt-moderation'),
 
 ];

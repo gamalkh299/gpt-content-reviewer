@@ -23,7 +23,7 @@ class GptContentReviewer
      * Create a review entry and dispatch the moderation job.
      *
      * @param  \Illuminate\Database\Eloquent\Model  $model  The model to review
-     * @return Review
+     * @return void
      */
     public function createReview($model): void
     {
@@ -34,10 +34,16 @@ class GptContentReviewer
 
         ]);
 
-        ModerationJob::dispatch($review);
+        ModerationJob::dispatch($review)->onQueue(config('gpt-content-reviewer.queue'));
 
     }
 
+    /**
+     * Moderate the content using OpenAI GPT-3 API.
+     *
+     * @param  string  $input
+     * @return array
+     */
     public function ModerateContent($input): array
     {
         $modelToUse = 'omni-moderation-latest';
