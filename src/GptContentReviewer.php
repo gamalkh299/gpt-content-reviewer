@@ -6,7 +6,6 @@ use gamalkh\GptContentReviewer\Jobs\ModerationJob;
 use gamalkh\GptContentReviewer\Models\GptReviewer;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
 
 class GptContentReviewer
 {
@@ -97,9 +96,6 @@ class GptContentReviewer
 
     /**
      * Convert Image Path or URL to Base64 with MIME type prefix.
-     *
-     * @param string $input
-     * @return string
      */
     protected function getImageBase64(string $input): string
     {
@@ -111,19 +107,16 @@ class GptContentReviewer
             $mimeType = mime_content_type($input);
         }
 
-        return 'data:' . $mimeType . ';base64,' . base64_encode($imageData);
+        return 'data:'.$mimeType.';base64,'.base64_encode($imageData);
     }
 
     /**
      * Get the MIME type from a URL.
-     *
-     * @param string $url
-     * @return string
      */
     protected function getMimeTypeFromUrl(string $url): string
     {
         $headers = get_headers($url, 1);
+
         return $headers['Content-Type'] ?? 'application/octet-stream';
     }
-
 }

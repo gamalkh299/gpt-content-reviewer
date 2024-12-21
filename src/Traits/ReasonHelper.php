@@ -7,10 +7,9 @@ trait ReasonHelper
     /**
      * Extract the reason for flagging from the response.
      *
-     * @param array $response
      * @return array
      */
-    function getFlaggingReasons(array $response): string
+    public function getFlaggingReasons(array $response): string
     {
         $categories = $response[0]['categories'] ?? [];
         $scores = $response[0]['category_scores'] ?? [];
@@ -30,13 +29,12 @@ trait ReasonHelper
             return $b['score'] <=> $a['score'];
         });
 
-        $result =$this->getFlaggingSummary($reasons);
+        $result = $this->getFlaggingSummary($reasons);
 
         return $result;
     }
 
-
-    function getFlaggingSummary(array $response): string
+    public function getFlaggingSummary(array $response): string
     {
         $reasons = [];
         foreach ($response as $reason) {
@@ -45,5 +43,4 @@ trait ReasonHelper
 
         return implode(', ', $reasons);
     }
-
 }

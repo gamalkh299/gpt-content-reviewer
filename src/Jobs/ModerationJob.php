@@ -13,7 +13,7 @@ use Illuminate\Queue\SerializesModels;
 
 class ModerationJob implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels , ReasonHelper;
+    use Dispatchable, InteractsWithQueue, Queueable, ReasonHelper , SerializesModels;
 
     protected $review;
 
@@ -29,8 +29,7 @@ class ModerationJob implements ShouldQueue
     public function handle(): void
     {
 
-
-        if (!$this->review) {
+        if (! $this->review) {
             // Log error if the review cannot be found
             \Log::error("Review not found for ID: {$this->review->id}");
 
@@ -39,7 +38,7 @@ class ModerationJob implements ShouldQueue
 
         $reviewable = $this->review->reviewable;
 
-        if (!$reviewable) {
+        if (! $reviewable) {
             // Log error if the reviewable model cannot be found
             \Log::error("Reviewable model not found for ID: {$this->review->reviewable_id}");
 
@@ -50,8 +49,9 @@ class ModerationJob implements ShouldQueue
         $columnsToReview = is_array($columnsToReview) ? $columnsToReview : [$columnsToReview];
 
         foreach ($columnsToReview as $column) {
-            if (!isset($reviewable->$column)) {
+            if (! isset($reviewable->$column)) {
                 \Log::warning("Column {$column} does not exist in the model.");
+
                 continue;
             }
 
@@ -69,7 +69,6 @@ class ModerationJob implements ShouldQueue
                     'response' => $response,
                     'status' => 'completed',
                 ]);
-
 
                 //user-defined callback
                 if (method_exists($reviewable, 'handleReviewResult')) {

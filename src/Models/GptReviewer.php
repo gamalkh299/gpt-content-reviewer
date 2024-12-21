@@ -17,18 +17,15 @@ class GptReviewer extends model
         'status',
     ];
 
-
-    protected $with=[
+    protected $with = [
         'reviewable',
     ];
-
 
     /**
      * Get the model that the review belongs to.
      *
      * @return \Illuminate\Database\Eloquent\Relations\MorphTo
      */
-
     public function reviewable()
     {
         return $this->morphTo();
