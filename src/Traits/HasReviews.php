@@ -13,6 +13,16 @@ trait HasReviews
      * @return array|string
      */
         public abstract function getReviewableColumns();
+
+
+    /**
+     * @param GptReviewer $review
+     * @return void
+     */
+        public abstract function handleReviewResult(GptReviewer $review): void;
+
+
+
     /**
      * Define a polymorphic relation to reviews.
      *

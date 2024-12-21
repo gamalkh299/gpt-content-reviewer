@@ -26,7 +26,7 @@ class GptContentReviewer
      * @param  \Illuminate\Database\Eloquent\Model  $model  The model to review
      * @return Review
      */
-    public function createReview($model)
+    public function createReview($model): void
     {
         $review = GptReviewer::create([
             'reviewable_type' => get_class($model),

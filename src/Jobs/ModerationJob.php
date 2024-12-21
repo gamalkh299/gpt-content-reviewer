@@ -14,13 +14,12 @@ class ModerationJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected $reviewId;
+    protected $review;
 
-    public function __construct($reviewId, $content)
+    public function __construct(GptReviewer $review)
     {
 
-        $this->reviewId = $reviewId;
-        $this->content = $content;
+        $this->review = $review;
     }
 
     /**
@@ -28,32 +27,59 @@ class ModerationJob implements ShouldQueue
      */
     public function handle(): void
     {
-        $review = GptReviewer::find($this->reviewId);
 
-        if (! $review) {
+
+        if (!$this->review) {
             // Log error if the review cannot be found
-            \Log::error("Review not found for ID: {$this->reviewId}");
+            \Log::error("Review not found for ID: {$this->review->id}");
 
             return;
         }
 
-        // Initialize the Content Review Service
-        $service = app(GptContentReviewer::class);
+        $reviewable = $this->review->reviewable;
 
-        // Review the content
-        try {
-            $response = $service->ModerateContent($this->content);
+        if (!$reviewable) {
+            // Log error if the reviewable model cannot be found
+            \Log::error("Reviewable model not found for ID: {$this->review->reviewable_id}");
 
-            $review->update([
-                'is_flagged' => $response['flagged'] ?? false,
-                'reason' => $response['reason'] ?? null,
-                'status' => 'completed',
-            ]);
-        } catch (\Exception $e) {
-            $review->update([
-                'status' => 'failed',
-                'reason' => $e->getMessage(),
-            ]);
+            return;
+        }
+
+        $columnsToReview = $reviewable->getReviewableColumns();
+        $columnsToReview = is_array($columnsToReview) ? $columnsToReview : [$columnsToReview];
+
+        foreach ($columnsToReview as $column) {
+            if (!isset($reviewable->$column)) {
+                \Log::warning("Column {$column} does not exist in the model.");
+                continue;
+            }
+
+            $content = $reviewable->$column;
+
+            // Initialize the Content Review Service
+            $service = app(GptContentReviewer::class);
+
+            try {
+                $response = $service->ModerateContent($content);
+
+                $this->review->update([
+                    'is_flagged' => $response[0]['flagged'] ?? false,
+                    'reason' => $response['reason'] ?? null,
+                    'response' => $response,
+                    'status' => 'completed',
+                ]);
+
+
+                //user-defined callback
+                if (method_exists($reviewable, 'handleReviewResult')) {
+                    $reviewable->handleReviewResult($this->review, $column);
+                }
+            } catch (\Exception $e) {
+                $this->review->update([
+                    'status' => 'failed',
+                    'reason' => $e->getMessage(),
+                ]);
+            }
         }
     }
 }
