@@ -35,9 +35,8 @@ class GptContentReviewer
 
         ]);
 
-        ModerationJob::dispatch($review, $model->content);
+        ModerationJob::dispatch($review);
 
-        return $review;
     }
 
     public function ModerateContent($input): array
@@ -45,8 +44,6 @@ class GptContentReviewer
         $modelToUse = 'omni-moderation-latest';
 
         try {
-            Log::info('from ModerateContent Function : ' + $input);
-
             if ($this->isImage($input)) {
                 $imageData = $this->getImageBase64($input);
 
@@ -56,10 +53,6 @@ class GptContentReviewer
                 ])->post('https://api.openai.com/v1/moderations', [
                     'model' => $modelToUse,
                     'input' => [
-                        [
-                            'type' => 'text',
-                            'text' => $input,
-                        ],
                         [
                             'type' => 'image_url',
                             'image_url' => [
@@ -103,19 +96,34 @@ class GptContentReviewer
     }
 
     /**
-     * Convert Image Path or URL to Base64
+     * Convert Image Path or URL to Base64 with MIME type prefix.
      *
-     * @param  string  $input
+     * @param string $input
      * @return string
      */
-    protected function getImageBase64($input)
+    protected function getImageBase64(string $input): string
     {
         if (filter_var($input, FILTER_VALIDATE_URL)) {
             $imageData = file_get_contents($input);
+            $mimeType = $this->getMimeTypeFromUrl($input);
         } else {
             $imageData = file_get_contents($input);
+            $mimeType = mime_content_type($input);
         }
 
-        return base64_encode($imageData);
+        return 'data:' . $mimeType . ';base64,' . base64_encode($imageData);
     }
+
+    /**
+     * Get the MIME type from a URL.
+     *
+     * @param string $url
+     * @return string
+     */
+    protected function getMimeTypeFromUrl(string $url): string
+    {
+        $headers = get_headers($url, 1);
+        return $headers['Content-Type'] ?? 'application/octet-stream';
+    }
+
 }
