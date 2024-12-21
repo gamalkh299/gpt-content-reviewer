@@ -4,6 +4,7 @@ namespace gamalkh\GptContentReviewer\Jobs;
 
 use gamalkh\GptContentReviewer\GptContentReviewer;
 use gamalkh\GptContentReviewer\Models\GptReviewer;
+use gamalkh\GptContentReviewer\Traits\ReasonHelper;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -12,7 +13,7 @@ use Illuminate\Queue\SerializesModels;
 
 class ModerationJob implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels , ReasonHelper;
 
     protected $review;
 
@@ -64,7 +65,7 @@ class ModerationJob implements ShouldQueue
 
                 $this->review->update([
                     'is_flagged' => $response[0]['flagged'] ?? false,
-                    'reason' => $response['reason'] ?? null,
+                    'reason' => $this->getFlaggingReasons($response) ?? null,
                     'response' => $response,
                     'status' => 'completed',
                 ]);
@@ -72,7 +73,7 @@ class ModerationJob implements ShouldQueue
 
                 //user-defined callback
                 if (method_exists($reviewable, 'handleReviewResult')) {
-                    $reviewable->handleReviewResult($this->review, $column);
+                    $reviewable->handleReviewResult($this->review);
                 }
             } catch (\Exception $e) {
                 $this->review->update([
