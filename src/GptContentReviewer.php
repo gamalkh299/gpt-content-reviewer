@@ -34,7 +34,7 @@ class GptContentReviewer
 
         ]);
 
-        ModerationJob::dispatch($review);
+        ModerationJob::dispatch($review)->onQueue(config('gpt-content-reviewer.queue'));
 
     }
 
