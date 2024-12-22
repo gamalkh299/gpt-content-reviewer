@@ -67,7 +67,7 @@ you can use the package to create a review for a text or an image.
 ```php
 
 $gptContentReviewer = new gamalkh\GptContentReviewer();
-echo $gptContentReviewer->create('Hello, gamal!');
+echo $gptContentReviewer->createReview('Hello, gamal!');
 
 ```
 from the above code, the package will create a review for the text "Hello, gamal !" .
@@ -76,12 +76,12 @@ ___
 for images, you can use the following code to create a review for an image URL or base64.
 ```php
 $gptContentReviewer = new gamalkh\GptContentReviewer();
-echo $gptContentReviewer->create('https://example.com/image.jpg');
+echo $gptContentReviewer->createReview('https://example.com/image.jpg');
 ```
 or
 ```php
 $gptContentReviewer = new gamalkh\GptContentReviewer();
-echo $gptContentReviewer->create('data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxMTEhUTExMWFhUXGBgYGBgYGBgYGBgYGBgYFxgYFxgYHSggGBolHRgYITEhJSkrLi4uFx8zODMtNygtLisBCgoKDg0OGxAQGy0lICUt
+echo $gptContentReviewer->createReview('data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxMTEhUTExMWFhUXGBgYGBgYGBgYGBgYGBgYFxgYFxgYHSggGBolHRgYITEhJSkrLi4uFx8zODMtNygtLisBCgoKDg0OGxAQGy0lICUt
 
 ```
 
