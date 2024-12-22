@@ -34,7 +34,7 @@ class GptContentReviewerServiceProvider extends PackageServiceProvider
         ], 'config');
 
         $this->publishes([
-            __DIR__.'/../database/migrations/create_gpt_content_reviewer_table.php.stub' => database_path('migrations/'.date('Y_m_d_His', time()).'_create_gpt_content_reviewer_table.php'),
+            __DIR__.'/../database/migrations/create_gpt_content_reviewer_table.php.stub' => database_path('migrations/2024_12_22_000000_create_gpt_content_reviewer_table.php'),
         ], 'migrations');
     }
 }
