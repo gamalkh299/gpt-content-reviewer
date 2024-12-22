@@ -30,30 +30,67 @@ php artisan vendor:publish --tag="gpt-content-reviewer-migrations"
 php artisan migrate
 ```
 
-You can publish the config file with:
-
-```bash
-php artisan vendor:publish --tag="gpt-content-reviewer-config"
-```
-
 This is the contents of the published config file:
 
 ```php
 return [
+    'key' => env('GPT_CONTENT_REVIEWER_KEY'),
+    'queue' => env('GPT_CONTENT_REVIEWER_QUEUE', 'gpt-content-reviewer'),
 ];
 ```
 
-Optionally, you can publish the views using
-
-```bash
-php artisan vendor:publish --tag="gpt-content-reviewer-views"
-```
 
 ## Usage
 
+- At fisrt, you need to get an API key from [ChatGPT](https://www.openai.com/).
+- Then, you need to add the API key to your `.env` file.
+```bash
+GPT_CONTENT_REVIEWER_KEY=your-api-key
+```
+Then add the following trait to the model you want to review its content.
+```php
+use gamalkh\GptContentReviewer\Traits\Reviewable;
+```
+
+Don't forget to implement the **getReviewableColumns** abstract function to specify the columns you want to review and **handleReviewResult** abstract function to handle the review result. 
+```php
+public function getReviewableColumns(): array
+{
+   // return the columns you want to review
+    return ['content'];
+}
+
+public function handleReviewResult($result)
+{
+    // handle the review result
+}
+```
+
+before you use it you need to run the following command to create the review table.
+```bash
+php artisan queue:work --queue=gpt-content-reviewer
+```
+
+you can use the package to create a review for a text or an image.
+```php
+
+$gptContentReviewer = new gamalkh\GptContentReviewer();
+echo $gptContentReviewer->create('Hello, gamal!');
+
+```
+from the above code, the package will create a review for the text "Hello, gamal !" .
+
+___
+for images, you can use the following code to create a review for an image URL or base64.
 ```php
 $gptContentReviewer = new gamalkh\GptContentReviewer();
-echo $gptContentReviewer->echoPhrase('Hello, gamalkh!');
+echo $gptContentReviewer->create('https://example.com/image.jpg');
+```
+or
+```php
+$gptContentReviewer = new gamalkh\GptContentReviewer();
+echo $gptContentReviewer->create('data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxMTEhUTExMWFhUXGBgYGBgYGBgYGBgYGBgYFxgYFxgYHSggGBolHRgYITEhJSkrLi4uFx8zODMtNygtLisBCgoKDg0OGxAQGy0lICUt
+
 ```
 
 ## Testing
@@ -77,8 +114,6 @@ Please review [our security policy](../../security/policy) on how to report secu
 ## Credits
 
 - [Gamal Khaled](https://github.com/gamalkh299)
-- [All Contributors](../../contributors)
-
 ## License
 
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
