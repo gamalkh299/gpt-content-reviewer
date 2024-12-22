@@ -5,7 +5,7 @@
 [![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/gamalkh299/gpt-content-reviewer/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/gamalkh299/gpt-content-reviewer/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/gamalkh299/gpt-content-reviewer.svg?style=flat-square)](https://packagist.org/packages/gamalkh299/gpt-content-reviewer)
 
-This is where your description should go. Limit it to a paragraph or two. Consider adding a small example.
+This package allows you to review the content of a model using ChatGPT Moderation API.
 
 ## Installation
 
