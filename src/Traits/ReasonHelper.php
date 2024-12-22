@@ -6,9 +6,6 @@ trait ReasonHelper
 {
     /**
      * Extract the reason for flagging from the response.
-     *
-     * @param array $response
-     * @return string
      */
     public function getFlaggingReasons(array $response): string
     {
