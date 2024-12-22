@@ -15,7 +15,7 @@ class ModerationJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, ReasonHelper , SerializesModels;
 
-    protected $review;
+    protected GptReviewer $review;
 
     public function __construct(GptReviewer $review)
     {
@@ -65,7 +65,7 @@ class ModerationJob implements ShouldQueue
 
                 $this->review->update([
                     'is_flagged' => $response[0]['flagged'] ?? false,
-                    'reason' => $this->getFlaggingReasons($response) ?? null,
+                    'reason' => $this->getFlaggingReasons($response) ,
                     'response' => $response,
                     'status' => 'completed',
                 ]);

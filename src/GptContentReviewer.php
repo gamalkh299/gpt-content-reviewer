@@ -119,7 +119,7 @@ class GptContentReviewer
      */
     protected function getMimeTypeFromUrl(string $url): string
     {
-        $headers = get_headers($url, 1);
+        $headers = get_headers($url, true);
 
         return $headers['Content-Type'] ?? 'application/octet-stream';
     }

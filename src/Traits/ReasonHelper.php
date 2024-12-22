@@ -7,7 +7,8 @@ trait ReasonHelper
     /**
      * Extract the reason for flagging from the response.
      *
-     * @return array
+     * @param array $response
+     * @return string
      */
     public function getFlaggingReasons(array $response): string
     {
@@ -24,14 +25,16 @@ trait ReasonHelper
             }
         }
 
+        if (empty($reasons)) {
+            return 'No reasons found';
+        }
+
         // Sort reasons by score descending (optional, for prioritization)
         usort($reasons, function ($a, $b) {
             return $b['score'] <=> $a['score'];
         });
 
-        $result = $this->getFlaggingSummary($reasons);
-
-        return $result;
+        return $this->getFlaggingSummary($reasons);
     }
 
     public function getFlaggingSummary(array $response): string
