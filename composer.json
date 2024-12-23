@@ -1,5 +1,6 @@
 {
     "name": "gamalkh299/gpt-content-reviewer",
+    "version": "1.0.0",
     "description": "A Laravel package to review content and images using ChatGPT API",
     "keywords": [
         "Gamal Khaled",

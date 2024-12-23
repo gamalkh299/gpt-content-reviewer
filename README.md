@@ -26,8 +26,8 @@ This is the contents of the published config file:
 
 ```php
 return [
-    'key' => env('GPT_CONTENT_REVIEWER_KEY'),
-    'queue' => env('GPT_CONTENT_REVIEWER_QUEUE', 'gpt-content-reviewer'),
+    'key' => env('CHAT_GPT_API_KEY'),
+    'queue' => env('GPT_QUEUE', 'gpt-content-reviewer'),
 ];
 ```
 
@@ -37,7 +37,7 @@ return [
 - At fisrt, you need to get an API key from [ChatGPT](https://www.openai.com/).
 - Then, you need to add the API key to your `.env` file.
 ```bash
-GPT_CONTENT_REVIEWER_KEY=your-api-key
+CHAT_GPT_API_KEY=your-api-key
 ```
 Then add the following trait to the model you want to review its content.
 ```php
