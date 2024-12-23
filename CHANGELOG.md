@@ -1,3 +1,11 @@
-# Changelog
+## [1.0.0] - 2024-12-22
+### Added
+- Initial release with basic functionality.
+- Moderation support for text and images.
+- Queue-based moderation processing.
 
-All notable changes to `gpt-content-reviewer` will be documented in this file.
+### Fixed
+- N/A
+
+### Changed
+- N/A
