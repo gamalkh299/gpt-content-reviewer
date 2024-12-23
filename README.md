@@ -63,26 +63,12 @@ before you use it you need to run the following command to create the review tab
 php artisan queue:work --queue=gpt-content-reviewer
 ```
 
-you can use the package to create a review for a text or an image.
+you can use the package to create a review for a model and it will be added to the queue to be reviewed.
 ```php
 
+$model = Model::find(1);
 $gptContentReviewer = new gamalkh\GptContentReviewer();
-echo $gptContentReviewer->createReview('Hello, gamal!');
-
-```
-from the above code, the package will create a review for the text "Hello, gamal !" .
-
-___
-for images, you can use the following code to create a review for an image URL or base64.
-```php
-$gptContentReviewer = new gamalkh\GptContentReviewer();
-echo $gptContentReviewer->createReview('https://example.com/image.jpg');
-```
-or
-```php
-$gptContentReviewer = new gamalkh\GptContentReviewer();
-echo $gptContentReviewer->createReview('data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxMTEhUTExMWFhUXGBgYGBgYGBgYGBgYGBgYFxgYFxgYHSggGBolHRgYITEhJSkrLi4uFx8zODMtNygtLisBCgoKDg0OGxAQGy0lICUt
-
+$gptContentReviewer->createReview($model);
 ```
 
 ## Testing
