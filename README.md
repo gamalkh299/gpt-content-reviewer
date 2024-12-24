@@ -18,7 +18,7 @@ composer require gamalkh299/gpt-content-reviewer
 You can publish and run the migrations with:
 
 ```bash
-php artisan vendor:publish --tag="gpt-content-reviewer-migrations"
+php artisan vendor:publish --tag="gpt-content-reviewer"
 php artisan migrate
 ```
 
